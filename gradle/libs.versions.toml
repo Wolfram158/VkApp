@@ -1,0 +1,70 @@
+[versions]
+agp = "8.5.0"
+kotlin = "1.9.0"
+ksp = "1.9.22-1.0.16"
+coreKtx = "1.13.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+activity = "1.9.2"
+constraintlayout = "2.1.4"
+vk-holder = "1.0.0"
+desugar = "2.1.2"
+vkUserIdVersion = "4.0.1"
+vkSdkVersion = "2.0.0"
+roomVersion = "2.6.1"
+picassoVersion = "2.71828"
+retrofitVersion = "2.9.0"
+coroutinesVersion = "1.7.3"
+workVersion = "2.9.1"
+cardviewVersion = "1.0.0"
+recyclerviewVersion = "1.3.2"
+fragmentVersion = "1.8.3"
+dagger = "2.51"
+lifecycleVersion = "2.8.5"
+okHttp = "4.12.0"
+
+[libraries]
+okHttpLog = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttp" }
+okHttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttp" }
+vk-userid = { group = "com.vk", name = "android-sdk-id", version.ref = "vkUserIdVersion" }
+vk-sdk-core = { group = "com.vk", name = "android-sdk-core", version.ref = "vkSdkVersion" }
+vk-sdk-api = { group = "com.vk", name = "android-sdk-api", version = "4.1.0" }
+vk-id = { group = "com.vk.id", name = "vkid", version.ref = "vkSdkVersion" }
+vk-sdk = { group = "com.vk.id", name = "vk-sdk-support", version.ref = "vkSdkVersion" }
+vk-onetap = { group = "com.vk.id", name = "onetap-xml", version.ref = "vkSdkVersion" }
+desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar"}
+dagger = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger"}
+dagger-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger"}
+dagger-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger"}
+dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger"}
+lifecycle = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleVersion" }
+androidx-room = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
+picasso = { group = "com.squareup.picasso", name = "picasso", version.ref = "picassoVersion"}
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitVersion" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofitVersion" }
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesVersion"}
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesVersion"}
+work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workVersion" }
+cardiew = { group = "androidx.cardview", name = "cardview", version.ref = "cardviewVersion" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerviewVersion" }
+fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentVersion" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+vk-holder = { id = "vkid.manifest.placeholders", version.ref = "vk-holder" }
+

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/owner_comment_image"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="@null"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/owner_comment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/name"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="@id/owner_comment_image"
+            app:layout_constraintStart_toEndOf="@id/owner_comment_image" />
+
+        <TextView
+            android:id="@+id/comment_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/text_comment"
+            app:layout_constraintStart_toStartOf="@id/owner_comment_image" />
+
+        <TextView
+            android:id="@+id/text_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/text"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/owner_comment_name"
+            app:layout_constraintStart_toEndOf="@id/owner_comment_image" />
+
+        <ImageView
+            android:id="@+id/image_like"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toStartOf="@id/text_like"
+            app:layout_constraintTop_toBottomOf="@id/text_comment"
+            app:srcCompat="@drawable/like" />
+
+        <TextView
+            android:id="@+id/text_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintTop_toTopOf="@id/image_like"
+            app:layout_constraintBottom_toBottomOf="@id/image_like"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="400" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

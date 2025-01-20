@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">VkApp</string>
+    <string name="news">News</string>
+    <string name="messages">Messages</string>
+    <string name="friends">Friends</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="text">Text</string>
+    <string name="groups">groups</string>
+    <string name="_320">320</string>
+    <string name="members_word">участников</string>
+    <string name="error_load_text">Произошла ошибка при загрузке данных</string>
+    <string name="try_load">Повторить попытку</string>
+</resources>
