@@ -1,5 +1,6 @@
 package android.learn.vkapp.presentation.group
 
+import android.content.Context
 import android.learn.vkapp.R
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.learn.vkapp.data.mapper.ItemWallMapper
-import android.learn.vkapp.data.network.ApiFactory
 import android.learn.vkapp.databinding.FragmentGroupBinding
 import android.learn.vkapp.domain.group.ItemWall
+import android.learn.vkapp.presentation.App
+import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.comments.CommentsFragment
 import android.learn.vkapp.presentation.group.adapter.WallAdapter
 import android.view.View.GONE
@@ -19,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import com.vk.id.VKID
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
 class GroupFragment : Fragment() {
@@ -30,6 +33,18 @@ class GroupFragment : Fragment() {
 
     private lateinit var wallViewModel: WallViewModel
     private lateinit var adapter: WallAdapter
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (requireActivity().application as App).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,7 +76,7 @@ class GroupFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        wallViewModel = ViewModelProvider(this)[WallViewModel::class.java]
+        wallViewModel = ViewModelProvider(this, viewModelFactory)[WallViewModel::class.java]
         wallViewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 Error -> {
@@ -102,7 +117,7 @@ class GroupFragment : Fragment() {
             override fun onLikeClick(itemWall: ItemWall, position: Int) {
                 lifecycleScope.launch {
                     val response = VKID.instance.accessToken?.token?.let {
-                        ApiFactory.apiService.addLike(
+                        wallViewModel.addLike(
                             it,
                             "post",
                             itemWall.id.toLong().absoluteValue,
@@ -117,7 +132,7 @@ class GroupFragment : Fragment() {
             override fun onDislikeClick(itemWall: ItemWall, position: Int) {
                 lifecycleScope.launch {
                     val response = VKID.instance.accessToken?.token?.let {
-                        ApiFactory.apiService.deleteLike(
+                        wallViewModel.deleteLike(
                             it,
                             "post",
                             itemWall.id.toLong().absoluteValue,
@@ -137,11 +152,10 @@ class GroupFragment : Fragment() {
         adapter.onGotoCommentsClickListener = object : WallAdapter.OnGotoCommentsClickListener {
             override fun onGotoCommentsClick(postId: String, ownerId: String) {
                 parentFragmentManager.beginTransaction()
-                    .replace(
+                    .add(
                         R.id.home_container,
                         CommentsFragment.newInstance(postId = postId, ownerId = ownerId)
-                    )
-                    .addToBackStack(null).commit()
+                    ).hide(parentFragmentManager.fragments.last()).addToBackStack(null).commit()
             }
         }
     }

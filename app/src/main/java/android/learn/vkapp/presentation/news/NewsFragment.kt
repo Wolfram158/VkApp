@@ -1,5 +1,6 @@
 package android.learn.vkapp.presentation.news
 
+import android.content.Context
 import android.learn.vkapp.R
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.learn.vkapp.data.mapper.ItemFeedMapper
-import android.learn.vkapp.data.network.ApiFactory
 import android.learn.vkapp.databinding.FragmentNewsBinding
 import android.learn.vkapp.domain.news.ItemFeed
+import android.learn.vkapp.presentation.App
+import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.comments.CommentsFragment
 import android.learn.vkapp.presentation.group.GroupFragment
 import android.learn.vkapp.presentation.news.adapter.NewsAdapter
@@ -20,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import com.vk.id.VKID
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
 class NewsFragment : Fragment() {
@@ -29,6 +32,18 @@ class NewsFragment : Fragment() {
 
     private lateinit var newsViewModel: NewsViewModel
     private lateinit var adapter: NewsAdapter
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (requireActivity().application as App).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,7 +76,7 @@ class NewsFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        newsViewModel = ViewModelProvider(this)[NewsViewModel::class.java]
+        newsViewModel = ViewModelProvider(this, viewModelFactory)[NewsViewModel::class.java]
         newsViewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 Error -> {
@@ -90,7 +105,7 @@ class NewsFragment : Fragment() {
             override fun onLikeClick(itemFeed: ItemFeed, position: Int) {
                 lifecycleScope.launch {
                     val response = VKID.instance.accessToken?.token?.let {
-                        ApiFactory.apiService.addLike(
+                        newsViewModel.addLike(
                             it,
                             "post",
                             itemFeed.postId.toLong().absoluteValue,
@@ -105,7 +120,7 @@ class NewsFragment : Fragment() {
             override fun onDislikeClick(itemFeed: ItemFeed, position: Int) {
                 lifecycleScope.launch {
                     val response = VKID.instance.accessToken?.token?.let {
-                        ApiFactory.apiService.deleteLike(
+                        newsViewModel.deleteLike(
                             it,
                             "post",
                             itemFeed.postId.toLong().absoluteValue,
@@ -125,23 +140,28 @@ class NewsFragment : Fragment() {
         adapter.onGotoWallClickListener = object : NewsAdapter.OnGotoWallClickListener {
             override fun onGotoWallClick(id: String) {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.home_container, GroupFragment.newInstance(id))
+                    .add(R.id.home_container, GroupFragment.newInstance(id), null)
+                    .hide(parentFragmentManager.fragments.last())
                     .addToBackStack(null).commit()
             }
         }
         adapter.onGotoCommentsClickListener = object : NewsAdapter.OnGotoCommentsClickListener {
             override fun onGotoCommentsClick(postId: String, ownerId: String) {
                 parentFragmentManager.beginTransaction()
-                    .replace(
+                    .add(
                         R.id.home_container,
-                        CommentsFragment.newInstance(postId = postId, ownerId = ownerId)
+                        CommentsFragment.newInstance(postId = postId, ownerId = ownerId),
+                        null
                     )
+                    .hide(parentFragmentManager.fragments.last())
                     .addToBackStack(null).commit()
             }
         }
     }
 
     companion object {
+        const val TAG = "NewsFragment"
+
         fun newInstance() = NewsFragment()
     }
 }

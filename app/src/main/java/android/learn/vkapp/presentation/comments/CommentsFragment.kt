@@ -1,16 +1,17 @@
 package android.learn.vkapp.presentation.comments
 
+import android.content.Context
 import android.learn.vkapp.data.mapper.CommentsMapper
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.learn.vkapp.data.network.ApiFactory
 import android.learn.vkapp.databinding.FragmentCommentsBinding
 import android.learn.vkapp.domain.comments.Comment
+import android.learn.vkapp.presentation.App
+import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.comments.adapter.CommentsAdapter
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.vk.id.VKID
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
 class CommentsFragment : Fragment() {
@@ -30,6 +32,18 @@ class CommentsFragment : Fragment() {
 
     private lateinit var commentsViewModel: CommentsViewModel
     private lateinit var adapter: CommentsAdapter
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (requireActivity().application as App).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,7 +86,7 @@ class CommentsFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        commentsViewModel = ViewModelProvider(this)[CommentsViewModel::class.java]
+        commentsViewModel = ViewModelProvider(this, viewModelFactory)[CommentsViewModel::class.java]
         commentsViewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 Error -> {
@@ -104,10 +118,8 @@ class CommentsFragment : Fragment() {
             override fun onLikeClick(comment: Comment, position: Int) {
                 lifecycleScope.launch {
                     val response = VKID.instance.accessToken?.token?.let {
-                        ApiFactory.apiService.addLike(
-                            it,
-                            "comment",
-                            comment.id.toLong().absoluteValue,
+                        commentsViewModel.addLike(
+                            it, "comment", comment.id.toLong().absoluteValue,
                             comment.ownerId.toLong()
                         )
                     }
@@ -119,10 +131,8 @@ class CommentsFragment : Fragment() {
             override fun onDislikeClick(comment: Comment, position: Int) {
                 lifecycleScope.launch {
                     val response = VKID.instance.accessToken?.token?.let {
-                        ApiFactory.apiService.deleteLike(
-                            it,
-                            "comment",
-                            comment.id.toLong().absoluteValue,
+                        commentsViewModel.deleteLike(
+                            it, "comment", comment.id.toLong().absoluteValue,
                             comment.ownerId.toLong()
                         )
                     }

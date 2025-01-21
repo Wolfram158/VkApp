@@ -1,5 +1,6 @@
 package android.learn.vkapp.presentation.groups
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import android.learn.vkapp.R
 import android.learn.vkapp.data.mapper.GroupsMapper
 import android.learn.vkapp.databinding.FragmentGroupsBinding
+import android.learn.vkapp.presentation.App
+import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.group.GroupFragment
 import android.learn.vkapp.presentation.groups.adapter.GroupsAdapter
 import android.view.View.GONE
@@ -15,6 +18,7 @@ import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProvider
 import com.vk.id.VKID
 import java.lang.RuntimeException
+import javax.inject.Inject
 
 class GroupsFragment : Fragment() {
     private var _binding: FragmentGroupsBinding? = null
@@ -23,6 +27,18 @@ class GroupsFragment : Fragment() {
 
     private lateinit var groupsViewModel: GroupsViewModel
     private lateinit var adapter: GroupsAdapter
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (requireActivity().application as App).component
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +72,7 @@ class GroupsFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        groupsViewModel = ViewModelProvider(this)[GroupsViewModel::class.java]
+        groupsViewModel = ViewModelProvider(this, viewModelFactory)[GroupsViewModel::class.java]
         groupsViewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 Error -> {
@@ -94,6 +110,8 @@ class GroupsFragment : Fragment() {
     }
 
     companion object {
+        const val TAG = "GroupsFragment"
+
         fun newInstance() = GroupsFragment()
     }
 }

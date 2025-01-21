@@ -8,7 +8,6 @@ import android.learn.vkapp.R
 import android.learn.vkapp.databinding.ActivityHomeBinding
 import android.learn.vkapp.presentation.groups.GroupsFragment
 import android.learn.vkapp.presentation.news.NewsFragment
-import android.util.Log
 
 class HomeActivity : AppCompatActivity() {
     private val binding by lazy {
@@ -22,6 +21,10 @@ class HomeActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.item_groups -> {
+                    val fragment = supportFragmentManager.findFragmentByTag(GroupsFragment.TAG)
+                    if (fragment != null) {
+                        supportFragmentManager.beginTransaction().remove(fragment).commit()
+                    }
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.home_container, GroupsFragment.newInstance())
                         .addToBackStack(null)
@@ -29,7 +32,10 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 R.id.item_news -> {
-                    Log.d("VKK", "OK")
+                    val fragment = supportFragmentManager.findFragmentByTag(NewsFragment.TAG)
+                    if (fragment != null) {
+                        supportFragmentManager.beginTransaction().remove(fragment).commit()
+                    }
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.home_container, NewsFragment.newInstance())
                         .addToBackStack(null)

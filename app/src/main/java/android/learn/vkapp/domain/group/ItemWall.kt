@@ -1,6 +1,5 @@
 package android.learn.vkapp.domain.group
 
-import android.learn.vkapp.data.network.dto.ViewsDto
 import android.learn.vkapp.domain.news.CommentsInfo
 import android.learn.vkapp.domain.news.LikesInfo
 import android.learn.vkapp.domain.news.RepostsInfo
