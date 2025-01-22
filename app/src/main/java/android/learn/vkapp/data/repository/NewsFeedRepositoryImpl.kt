@@ -10,8 +10,16 @@ import javax.inject.Inject
 class NewsFeedRepositoryImpl @Inject constructor(
     apiService: ApiService
 ) : NewsFeedRepository {
-    override suspend fun loadRecommendations(token: String): NewsFeedResponseDto {
-        return apiService.loadRecommendations(token)
+    override suspend fun loadRecommendations(token: String, count: String): NewsFeedResponseDto {
+        return apiService.loadRecommendations(token, count)
+    }
+
+    override suspend fun loadNextRecommendations(
+        token: String,
+        startFrom: String,
+        count: String
+    ): NewsFeedResponseDto {
+        return apiService.loadRecommendations(token, startFrom, count)
     }
 
     override suspend fun addLike(

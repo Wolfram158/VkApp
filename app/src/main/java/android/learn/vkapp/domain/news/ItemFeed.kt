@@ -1,5 +1,7 @@
 package android.learn.vkapp.domain.news
 
+sealed class ItemFeedAdvanced
+
 data class ItemFeed(
     val postId: String,
     val sourceId: String,
@@ -15,4 +17,10 @@ data class ItemFeed(
     val comments: CommentsInfo,
     val likes: LikesInfo,
     val reposts: RepostsInfo
-)
+) : ItemFeedAdvanced()
+
+data object Loading : ItemFeedAdvanced()
+
+data object Error : ItemFeedAdvanced()
+
+data object RunOutOfNews : ItemFeedAdvanced()

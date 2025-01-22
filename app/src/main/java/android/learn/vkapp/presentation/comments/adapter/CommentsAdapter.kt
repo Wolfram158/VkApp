@@ -3,13 +3,11 @@ package android.learn.vkapp.presentation.comments.adapter
 import android.graphics.Color
 import android.learn.vkapp.databinding.ItemCommentBinding
 import android.learn.vkapp.domain.comments.Comment
+import android.learn.vkapp.utils.fromUnixToReadable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class CommentsAdapter : ListAdapter<Comment, CommentsViewHolder>(CommentsDiffUtilCallback) {
     var onLikeClick: OnLikeClickListener? = null
@@ -33,10 +31,7 @@ class CommentsAdapter : ListAdapter<Comment, CommentsViewHolder>(CommentsDiffUti
             val name = "${item.firstName} ${item.lastName}"
             ownerCommentName.text = name
             Picasso.get().load(item.photoUrl).into(ownerCommentImage)
-            val itemLong = item.date.toLong()
-            val d = Date(itemLong * 1000L)
-            val itemDateStr = SimpleDateFormat("yyyy dd MMM HH:mm", Locale.getDefault()).format(d)
-            commentDate.text = itemDateStr
+            commentDate.text = fromUnixToReadable(item.date.toLong())
             if (item.likes.wasLiked == "1") {
                 imageLike.setColorFilter(Color.RED)
             } else {

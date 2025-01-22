@@ -14,11 +14,11 @@ import android.learn.vkapp.presentation.App
 import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.comments.CommentsFragment
 import android.learn.vkapp.presentation.group.adapter.WallAdapter
+import android.learn.vkapp.utils.getAccessToken
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.vk.id.VKID
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 import javax.inject.Inject
@@ -104,9 +104,7 @@ class GroupFragment : Fragment() {
     private fun loadWall() {
         val groupIdVal = groupId
         if (groupIdVal != null) {
-            VKID.instance.accessToken?.token?.let {
-                wallViewModel.loadWall(it, groupIdVal)
-            }
+            wallViewModel.loadWall(getAccessToken(), groupIdVal)
         }
     }
 
@@ -116,30 +114,26 @@ class GroupFragment : Fragment() {
         adapter.onLikeClick = object : WallAdapter.OnLikeClickListener {
             override fun onLikeClick(itemWall: ItemWall, position: Int) {
                 lifecycleScope.launch {
-                    val response = VKID.instance.accessToken?.token?.let {
-                        wallViewModel.addLike(
-                            it,
-                            "post",
-                            itemWall.id.toLong().absoluteValue,
-                            -itemWall.ownerId.toLong()
-                        )
-                    }
-                    response?.response?.count?.let { adapter.updateLikes(it.toString(), position) }
+                    val response = wallViewModel.addLike(
+                        getAccessToken(),
+                        LIKE_OBJECT,
+                        itemWall.id.toLong().absoluteValue,
+                        -itemWall.ownerId.toLong()
+                    )
+                    response.response.count.let { adapter.updateLikes(it.toString(), position) }
                 }
             }
         }
         adapter.onDislikeClick = object : WallAdapter.OnDislikeClickListener {
             override fun onDislikeClick(itemWall: ItemWall, position: Int) {
                 lifecycleScope.launch {
-                    val response = VKID.instance.accessToken?.token?.let {
-                        wallViewModel.deleteLike(
-                            it,
-                            "post",
-                            itemWall.id.toLong().absoluteValue,
-                            -itemWall.ownerId.toLong()
-                        )
-                    }
-                    response?.response?.count?.let {
+                    val response = wallViewModel.deleteLike(
+                        getAccessToken(),
+                        LIKE_OBJECT,
+                        itemWall.id.toLong().absoluteValue,
+                        -itemWall.ownerId.toLong()
+                    )
+                    response.response.count.let {
                         adapter.updateLikes(
                             it.toString(),
                             position,
@@ -162,6 +156,7 @@ class GroupFragment : Fragment() {
 
     companion object {
         private const val ARG_PARAM1 = "id"
+        private const val LIKE_OBJECT = "post"
 
         fun newInstance(param1: String) =
             GroupFragment().apply {

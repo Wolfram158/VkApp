@@ -3,13 +3,11 @@ package android.learn.vkapp.presentation.group.adapter
 import android.graphics.Color
 import android.learn.vkapp.databinding.ItemFeedBinding
 import android.learn.vkapp.domain.group.ItemWall
+import android.learn.vkapp.utils.fromUnixToReadable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class WallAdapter : ListAdapter<ItemWall, WallViewHolder>(WallDiffUtilCallback) {
     var onLikeClick: OnLikeClickListener? = null
@@ -37,10 +35,7 @@ class WallAdapter : ListAdapter<ItemWall, WallViewHolder>(WallDiffUtilCallback) 
             Picasso.get().load(item.ownerPhotoUrl).into(ownerNewsImage)
             ownerNewsName.text = item.ownerName
             Picasso.get().load(item.photoContentUrl).into(imageAttachment)
-            val itemLong = item.date.toLong()
-            val d = Date(itemLong * 1000L)
-            val itemDateStr = SimpleDateFormat("yyyy dd MMM HH:mm", Locale.getDefault()).format(d)
-            newsDate.text = itemDateStr
+            newsDate.text = fromUnixToReadable(item.date.toLong())
             if (item.likes.wasLiked == "1") {
                 imageLike.setColorFilter(Color.RED)
             } else {

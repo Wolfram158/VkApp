@@ -9,9 +9,10 @@ import android.learn.vkapp.domain.news.ItemFeed
 import android.learn.vkapp.domain.news.LikesInfo
 import android.learn.vkapp.domain.news.RepostsInfo
 import android.util.Log
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class ItemFeedMapper {
+class ItemFeedMapper @Inject constructor() {
     fun mapToItemFeed(responseDto: NewsFeedResponseDto): List<ItemFeed> {
         val result = mutableListOf<ItemFeed>()
 

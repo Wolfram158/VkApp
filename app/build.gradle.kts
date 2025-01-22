@@ -1,4 +1,3 @@
-import shadow.bundletool.com.android.ddmlib.Log
 import java.util.Properties
 
 plugins {

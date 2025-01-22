@@ -12,6 +12,7 @@ import android.learn.vkapp.domain.comments.Comment
 import android.learn.vkapp.presentation.App
 import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.comments.adapter.CommentsAdapter
+import android.learn.vkapp.utils.getAccessToken
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProvider
@@ -79,7 +80,7 @@ class CommentsFragment : Fragment() {
         val postIdVal = postId
         val ownerIdVal = "-$ownerId"
         if (postIdVal != null) {
-            VKID.instance.accessToken?.token?.let {
+            getAccessToken().let {
                 commentsViewModel.loadComments(token = it, postId = postIdVal, ownerId = ownerIdVal)
             }
         }
@@ -117,26 +118,26 @@ class CommentsFragment : Fragment() {
         adapter.onLikeClick = object : CommentsAdapter.OnLikeClickListener {
             override fun onLikeClick(comment: Comment, position: Int) {
                 lifecycleScope.launch {
-                    val response = VKID.instance.accessToken?.token?.let {
+                    val response = getAccessToken().let {
                         commentsViewModel.addLike(
-                            it, "comment", comment.id.toLong().absoluteValue,
+                            it, LIKE_OBJECT, comment.id.toLong().absoluteValue,
                             comment.ownerId.toLong()
                         )
                     }
-                    response?.response?.count?.let { adapter.updateLikes(it.toString(), position) }
+                    response.response.count.let { adapter.updateLikes(it.toString(), position) }
                 }
             }
         }
         adapter.onDislikeClick = object : CommentsAdapter.OnDislikeClickListener {
             override fun onDislikeClick(comment: Comment, position: Int) {
                 lifecycleScope.launch {
-                    val response = VKID.instance.accessToken?.token?.let {
+                    val response = getAccessToken().let {
                         commentsViewModel.deleteLike(
-                            it, "comment", comment.id.toLong().absoluteValue,
+                            it, LIKE_OBJECT, comment.id.toLong().absoluteValue,
                             comment.ownerId.toLong()
                         )
                     }
-                    response?.response?.count?.let {
+                    response.response.count.let {
                         adapter.updateLikes(
                             it.toString(),
                             position,
@@ -151,6 +152,7 @@ class CommentsFragment : Fragment() {
     companion object {
         private const val POST_ID = "post_id"
         private const val OWNER_ID = "owner_id"
+        private const val LIKE_OBJECT = "comment"
 
         fun newInstance(postId: String, ownerId: String) =
             CommentsFragment().apply {

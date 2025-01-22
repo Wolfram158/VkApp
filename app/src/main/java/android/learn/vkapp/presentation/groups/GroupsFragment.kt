@@ -13,10 +13,10 @@ import android.learn.vkapp.presentation.App
 import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.group.GroupFragment
 import android.learn.vkapp.presentation.groups.adapter.GroupsAdapter
+import android.learn.vkapp.utils.getAccessToken
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProvider
-import com.vk.id.VKID
 import java.lang.RuntimeException
 import javax.inject.Inject
 
@@ -66,9 +66,7 @@ class GroupsFragment : Fragment() {
     }
 
     private fun loadGroups() {
-        VKID.instance.accessToken?.token?.let {
-            groupsViewModel.loadGroups(it)
-        }
+        groupsViewModel.loadGroups(getAccessToken())
     }
 
     private fun observeViewModel() {
