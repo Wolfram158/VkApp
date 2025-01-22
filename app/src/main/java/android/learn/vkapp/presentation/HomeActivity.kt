@@ -21,24 +21,24 @@ class HomeActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.item_groups -> {
-                    val fragment = supportFragmentManager.findFragmentByTag(GroupsFragment.TAG)
-                    if (fragment != null) {
-                        supportFragmentManager.beginTransaction().remove(fragment).commit()
-                    }
+//                    val fragment = supportFragmentManager.findFragmentByTag(GroupsFragment.TAG)
+//                    if (fragment != null) {
+//                        supportFragmentManager.beginTransaction().remove(fragment).commit()
+//                    }
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.home_container, GroupsFragment.newInstance())
-                        .addToBackStack(null)
+                        //.addToBackStack(null)
                         .commit()
                 }
 
                 R.id.item_news -> {
-                    val fragment = supportFragmentManager.findFragmentByTag(NewsFragment.TAG)
-                    if (fragment != null) {
-                        supportFragmentManager.beginTransaction().remove(fragment).commit()
-                    }
+//                    val fragment = supportFragmentManager.findFragmentByTag(NewsFragment.TAG)
+//                    if (fragment != null) {
+//                        supportFragmentManager.beginTransaction().remove(fragment).commit()
+//                    }
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.home_container, NewsFragment.newInstance())
-                        .addToBackStack(null)
+                        //.addToBackStack(null)
                         .commit()
                 }
 

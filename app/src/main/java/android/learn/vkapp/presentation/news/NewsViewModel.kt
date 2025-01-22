@@ -46,7 +46,7 @@ class NewsViewModel @Inject constructor(
             isAllLoaded = true
             return
         }
-        if (_state.value == Initial) {
+        if (_state.value == Initial || data.size == 0) {
             _state.value = FirstProgress
         } else {
             _state.value = Progress

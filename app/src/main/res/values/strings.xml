@@ -13,4 +13,5 @@
     <string name="error_load_text">Произошла ошибка при загрузке данных</string>
     <string name="try_load">Повторить попытку</string>
     <string name="run_out_of_news">Рекомендации закончились</string>
+    <string name="groups1">Groups</string>
 </resources>
