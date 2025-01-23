@@ -14,12 +14,13 @@ import androidx.recyclerview.widget.ListAdapter
 import com.squareup.picasso.Picasso
 import java.lang.RuntimeException
 
-class NewsAdapter : ListAdapter<ItemFeedAdvanced, NewsViewHolder>(NewsDiffUtilCallback) {
-    var onLikeClick: OnLikeClickListener? = null
-    var onDislikeClick: OnDislikeClickListener? = null
-    var onGotoWallClickListener: OnGotoWallClickListener? = null
-    var onGotoCommentsClickListener: OnGotoCommentsClickListener? = null
-    var onTryLoadClickListener: OnTryLoadClickListener? = null
+class NewsAdapter(
+    private val onLikeClick: OnLikeClickListener,
+    private val onDislikeClick: OnDislikeClickListener,
+    private val onGotoWallClickListener: OnGotoWallClickListener,
+    private val onGotoCommentsClickListener: OnGotoCommentsClickListener,
+    private val onTryLoadClickListener: OnTryLoadClickListener
+) : ListAdapter<ItemFeedAdvanced, NewsViewHolder>(NewsDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val layout = when (viewType) {
@@ -57,29 +58,29 @@ class NewsAdapter : ListAdapter<ItemFeedAdvanced, NewsViewHolder>(NewsDiffUtilCa
                     }
                     imageLike?.setOnClickListener {
                         if (item.likes.wasLiked == "0") {
-                            onLikeClick?.onLikeClick(item, position)
+                            onLikeClick.onLikeClick(item, position)
                         } else {
-                            onDislikeClick?.onDislikeClick(item, position)
+                            onDislikeClick.onDislikeClick(item, position)
                         }
                     }
                     imageComments?.setOnClickListener {
-                        onGotoCommentsClickListener?.onGotoCommentsClick(item.postId, item.ownerId)
+                        onGotoCommentsClickListener.onGotoCommentsClick(item.postId, item.ownerId)
                     }
                     textComments?.setOnClickListener {
-                        onGotoCommentsClickListener?.onGotoCommentsClick(item.postId, item.ownerId)
+                        onGotoCommentsClickListener.onGotoCommentsClick(item.postId, item.ownerId)
                     }
                     ownerNewsName?.setOnClickListener {
-                        onGotoWallClickListener?.onGotoWallClick(item.ownerId)
+                        onGotoWallClickListener.onGotoWallClick(item.ownerId)
                     }
                     ownerNewsImage?.setOnClickListener {
-                        onGotoWallClickListener?.onGotoWallClick(item.ownerId)
+                        onGotoWallClickListener.onGotoWallClick(item.ownerId)
                     }
                 }
             }
 
             Error -> {
                 holder.tryLoadButton?.setOnClickListener {
-                    onTryLoadClickListener?.onTryLoadClick()
+                    onTryLoadClickListener.onTryLoadClick()
                 }
             }
 

@@ -109,9 +109,7 @@ class NewsFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        adapter = NewsAdapter()
-        binding.newsRv.adapter = adapter
-        adapter.onLikeClick = object : NewsAdapter.OnLikeClickListener {
+        val onLikeClick = object : NewsAdapter.OnLikeClickListener {
             override fun onLikeClick(itemFeed: ItemFeed, position: Int) {
                 lifecycleScope.launch {
                     val response = newsViewModel.addLike(
@@ -124,7 +122,7 @@ class NewsFragment : Fragment() {
                 }
             }
         }
-        adapter.onDislikeClick = object : NewsAdapter.OnDislikeClickListener {
+        val onDislikeClick = object : NewsAdapter.OnDislikeClickListener {
             override fun onDislikeClick(itemFeed: ItemFeed, position: Int) {
                 lifecycleScope.launch {
                     val response = newsViewModel.deleteLike(
@@ -143,7 +141,7 @@ class NewsFragment : Fragment() {
                 }
             }
         }
-        adapter.onGotoWallClickListener = object : NewsAdapter.OnGotoWallClickListener {
+        val onGotoWallClickListener = object : NewsAdapter.OnGotoWallClickListener {
             override fun onGotoWallClick(id: String) {
                 parentFragmentManager.beginTransaction()
                     .add(R.id.home_container, GroupFragment.newInstance(id), null)
@@ -151,7 +149,7 @@ class NewsFragment : Fragment() {
                     .addToBackStack(null).commit()
             }
         }
-        adapter.onGotoCommentsClickListener = object : NewsAdapter.OnGotoCommentsClickListener {
+        val onGotoCommentsClickListener = object : NewsAdapter.OnGotoCommentsClickListener {
             override fun onGotoCommentsClick(postId: String, ownerId: String) {
                 parentFragmentManager.beginTransaction()
                     .add(
@@ -163,11 +161,19 @@ class NewsFragment : Fragment() {
                     .addToBackStack(null).commit()
             }
         }
-        adapter.onTryLoadClickListener = object : NewsAdapter.OnTryLoadClickListener {
+        val onTryLoadClickListener = object : NewsAdapter.OnTryLoadClickListener {
             override fun onTryLoadClick() {
                 newsViewModel.loadRecommendations(getAccessToken(), adapter)
             }
         }
+        adapter = NewsAdapter(
+            onTryLoadClickListener = onTryLoadClickListener,
+            onLikeClick = onLikeClick,
+            onDislikeClick = onDislikeClick,
+            onGotoWallClickListener = onGotoWallClickListener,
+            onGotoCommentsClickListener = onGotoCommentsClickListener
+        )
+        binding.newsRv.adapter = adapter
         with(binding.newsRv) {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
