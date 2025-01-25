@@ -30,34 +30,36 @@ class NewsViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
-    private val data = mutableListOf<ItemFeedAdvanced>()
+    private val _data = mutableListOf<ItemFeedAdvanced>()
+    val data: List<ItemFeedAdvanced>
+        get() = _data
+
     private var nextFrom: String? = null
-    private var isAllLoaded = false
 
-    fun getData() = data
-
-    fun isAllLoaded() = isAllLoaded
+    private var _isAllLoaded = false
+    val isAllLoaded: Boolean
+        get() = _isAllLoaded
 
     fun loadRecommendations(token: String, adapter: ListAdapter<ItemFeedAdvanced, NewsViewHolder>) {
         if (nextFrom == null && _state.value is Result) {
-            data.add(RunOutOfNews)
-            adapter.submitList(data)
-            adapter.notifyItemInserted(data.size - 1)
-            isAllLoaded = true
+            _data.add(RunOutOfNews)
+            adapter.submitList(_data)
+            adapter.notifyItemInserted(_data.size - 1)
+            _isAllLoaded = true
             return
         }
-        if (_state.value == Initial || data.size == 0) {
+        if (_state.value == Initial || _data.size == 0) {
             _state.value = FirstProgress
         } else {
             _state.value = Progress
-            if (data.last() is Err) {
-                data.removeLast()
-                adapter.submitList(data)
-                adapter.notifyItemRemoved(data.size)
+            if (_data.last() is Err) {
+                _data.removeLast()
+                adapter.submitList(_data)
+                adapter.notifyItemRemoved(_data.size)
             }
-            data.add(Loading)
-            adapter.submitList(data)
-            adapter.notifyItemInserted(data.size)
+            _data.add(Loading)
+            adapter.submitList(_data)
+            adapter.notifyItemInserted(_data.size)
         }
         var case = ErrorCase.NONE
         viewModelScope.launch {
@@ -73,20 +75,20 @@ class NewsViewModel @Inject constructor(
                 val mapped = mapper.mapToItemFeed(response)
                 nextFrom = response.response.nextFrom
                 if (case == ErrorCase.NEXT) {
-                    data.removeLast()
-                    adapter.submitList(data)
-                    adapter.notifyItemRemoved(data.size)
+                    _data.removeLast()
+                    adapter.submitList(_data)
+                    adapter.notifyItemRemoved(_data.size)
                 }
-                data.addAll(mapped)
+                _data.addAll(mapped)
                 _state.value = Result
             } catch (_: Exception) {
                 if (case == ErrorCase.FIRST) {
                     _state.value = FirstError
                 } else {
-                    data.removeLast()
-                    adapter.submitList(data)
-                    adapter.notifyItemRemoved(data.size)
-                    data.add(Err)
+                    _data.removeLast()
+                    adapter.submitList(_data)
+                    adapter.notifyItemRemoved(_data.size)
+                    _data.add(Err)
                     _state.value = Error
                 }
             }

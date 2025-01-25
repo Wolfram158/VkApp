@@ -79,9 +79,9 @@ class NewsFragment : Fragment() {
         newsViewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 Result -> {
-                    adapter.submitList(newsViewModel.getData())
+                    adapter.submitList(newsViewModel.data)
                     adapter.notifyItemRangeInserted(
-                        newsViewModel.getData().size,
+                        newsViewModel.data.size,
                         newsViewModel.getPerPage()
                     )
                     binding.progressBar.visibility = GONE
@@ -98,8 +98,8 @@ class NewsFragment : Fragment() {
                 }
 
                 Error -> {
-                    adapter.submitList(newsViewModel.getData())
-                    adapter.notifyItemInserted(newsViewModel.getData().size - 1)
+                    adapter.submitList(newsViewModel.data)
+                    adapter.notifyItemInserted(newsViewModel.data.size - 1)
                 }
 
                 Progress -> {}
@@ -187,7 +187,7 @@ class NewsFragment : Fragment() {
                         if (newsViewModel.state.value !is FirstProgress &&
                             newsViewModel.state.value !is Progress &&
                             newsViewModel.state.value !is Error &&
-                            !newsViewModel.isAllLoaded()
+                            !newsViewModel.isAllLoaded
                         ) {
                             if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                                 && firstVisibleItemPosition >= 0

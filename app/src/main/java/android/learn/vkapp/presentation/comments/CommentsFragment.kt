@@ -17,7 +17,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.vk.id.VKID
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 import javax.inject.Inject
