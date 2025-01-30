@@ -1,8 +1,8 @@
 package android.learn.vkapp.presentation.group
 
-import android.learn.vkapp.domain.group.LoadWallUseCase
 import android.learn.vkapp.domain.group.AddLikeUseCase
 import android.learn.vkapp.domain.group.DeleteLikeUseCase
+import android.learn.vkapp.domain.group.LoadWallUseCase
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,10 +22,11 @@ class WallViewModel @Inject constructor(
     fun loadWall(token: String, groupId: String) {
         _state.value = Progress
         viewModelScope.launch {
-            try {
-                val response = loadWallUseCase(token, "-$groupId", "1")
-                _state.value = Result(response)
-            } catch (_: Exception) {
+            runCatching {
+                loadWallUseCase(token, "-$groupId", "1")
+            }.onSuccess {
+                _state.value = Result(it)
+            }.onFailure {
                 _state.value = Error
             }
         }

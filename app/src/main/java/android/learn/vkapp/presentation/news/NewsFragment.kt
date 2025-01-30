@@ -2,11 +2,6 @@ package android.learn.vkapp.presentation.news
 
 import android.content.Context
 import android.learn.vkapp.R
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.learn.vkapp.databinding.FragmentNewsBinding
 import android.learn.vkapp.domain.news.ItemFeed
 import android.learn.vkapp.presentation.App
@@ -15,14 +10,18 @@ import android.learn.vkapp.presentation.comments.CommentsFragment
 import android.learn.vkapp.presentation.group.GroupFragment
 import android.learn.vkapp.presentation.news.adapter.NewsAdapter
 import android.learn.vkapp.utils.getAccessToken
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 import javax.inject.Inject
 import kotlin.math.absoluteValue
 

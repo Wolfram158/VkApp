@@ -18,35 +18,37 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.bottomNavigation.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.item_groups -> {
+        if (savedInstanceState == null) {
+            binding.bottomNavigation.setOnItemSelectedListener {
+                when (it.itemId) {
+                    R.id.item_groups -> {
 //                    val fragment = supportFragmentManager.findFragmentByTag(GroupsFragment.TAG)
 //                    if (fragment != null) {
 //                        supportFragmentManager.beginTransaction().remove(fragment).commit()
 //                    }
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.home_container, GroupsFragment.newInstance())
-                        //.addToBackStack(null)
-                        .commit()
-                }
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.home_container, GroupsFragment.newInstance())
+                            //.addToBackStack(null)
+                            .commit()
+                    }
 
-                R.id.item_news -> {
+                    R.id.item_news -> {
 //                    val fragment = supportFragmentManager.findFragmentByTag(NewsFragment.TAG)
 //                    if (fragment != null) {
 //                        supportFragmentManager.beginTransaction().remove(fragment).commit()
 //                    }
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.home_container, NewsFragment.newInstance())
-                        //.addToBackStack(null)
-                        .commit()
-                }
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.home_container, NewsFragment.newInstance())
+                            //.addToBackStack(null)
+                            .commit()
+                    }
 
-                R.id.item_friends -> {
+                    R.id.item_friends -> {
 
+                    }
                 }
+                true
             }
-            true
         }
 
         binding.bottomNavigation.selectedItemId = R.id.item_news
