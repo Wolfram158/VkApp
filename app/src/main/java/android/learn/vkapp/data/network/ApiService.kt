@@ -76,6 +76,18 @@ interface ApiService {
         @Query("fields") extra: String
     ): CommentsResponseDto
 
+    @GET("groups.search?v=5.199")
+    suspend fun searchGroups(
+        @Query("access_token") token: String,
+        @Query("q") query: String,
+        @Query("type") type: String,
+        @Query("sort") sort: Int,
+        @Query("offset") offset: Int,
+        @Query("count") count: Int,
+        @Query("fields") extra: String,
+        @Query("extended") extended: String,
+    ): GroupsResponseDto
+
 //    @GET("users.get?v=5.199")
 //    suspend fun getCurrentProfile(
 //        @Query("access_token") token: String,

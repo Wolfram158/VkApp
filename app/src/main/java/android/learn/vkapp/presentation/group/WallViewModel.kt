@@ -25,7 +25,9 @@ class WallViewModel @Inject constructor(
             runCatching {
                 loadWallUseCase(token, "-$groupId", "1")
             }.onSuccess {
-                _state.value = Result(it)
+                if (it.response != null) {
+                    _state.value = Result(it)
+                }
             }.onFailure {
                 _state.value = Error
             }

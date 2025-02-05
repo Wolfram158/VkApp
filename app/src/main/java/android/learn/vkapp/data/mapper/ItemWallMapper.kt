@@ -14,27 +14,32 @@ class ItemWallMapper {
     fun mapToItemWall(responseDto: GroupWallResponseDto): List<ItemWall> {
         val result = mutableListOf<ItemWall>()
 
-        val groups = responseDto.response.groups
-        val profiles = responseDto.response.profiles
-        val posts = responseDto.response.items
-        for (post in posts.stream()
-            .sorted(Comparator { o1, o2 -> return@Comparator if (o1.date < o2.date) 1 else -1 })) {
-            val group = groups.find { it.id.toLong() == post.ownerId.toLong().absoluteValue } ?: continue
-            val wallItem = ItemWall(
-                ownerPhotoUrl = group.photo,
-                ownerId = group.id,
-                ownerName = group.name,
-                id = post.id,
-                text = post.text,
-                date = post.date,
-                views = post.views.count.toInt(),
-                comments = post.comments.mapToCommentsInfo(),
-                likes = post.likes.mapToLikesInfo(),
-                reposts = post.reposts.mapToRepostsInfo(),
-                photoContentUrl = post.attachment.lastOrNull()?.photo?.photoUrls?.lastOrNull()?.url,
-                fromId = post.fromId
-            )
-            result.add(wallItem)
+        val groups = responseDto.response?.groups
+        val profiles = responseDto.response?.profiles
+        val posts = responseDto.response?.items
+        val sorted = posts?.stream()
+            ?.sorted(Comparator { o1, o2 -> return@Comparator if (o1.date < o2.date) 1 else -1 })
+        sorted?.let {
+            for (post in sorted) {
+                val group =
+                    groups?.find { it.id.toLong() == post.ownerId.toLong().absoluteValue }
+                        ?: continue
+                val wallItem = ItemWall(
+                    ownerPhotoUrl = group.photo,
+                    ownerId = group.id,
+                    ownerName = group.name,
+                    id = post.id,
+                    text = post.text,
+                    date = post.date,
+                    views = post.views?.count?.toInt(),
+                    comments = post.comments.mapToCommentsInfo(),
+                    likes = post.likes.mapToLikesInfo(),
+                    reposts = post.reposts.mapToRepostsInfo(),
+                    photoContentUrl = post.attachment.lastOrNull()?.photo?.photoUrls?.lastOrNull()?.url,
+                    fromId = post.fromId
+                )
+                result.add(wallItem)
+            }
         }
 
         return result

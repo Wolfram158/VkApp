@@ -12,5 +12,5 @@ data class ItemWallDto(
     @SerializedName("likes") val likes: LikesInfoDto,
     @SerializedName("reposts") val reposts: RepostsInfoDto,
     @SerializedName("attachments") val attachment: List<AttachmentDto>,
-    @SerializedName("views") val views: ViewsDto
+    @SerializedName("views") val views: ViewsDto?
 )

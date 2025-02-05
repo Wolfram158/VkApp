@@ -6,7 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.learn.vkapp.R
 import android.learn.vkapp.databinding.ActivityHomeBinding
-import android.learn.vkapp.presentation.groups.GroupsFragment
+import android.learn.vkapp.presentation.groups.HostGroupsFragment
+import android.learn.vkapp.presentation.groups.UserGroupsFragment
 import android.learn.vkapp.presentation.news.NewsFragment
 
 class HomeActivity : AppCompatActivity() {
@@ -27,8 +28,12 @@ class HomeActivity : AppCompatActivity() {
 //                        supportFragmentManager.beginTransaction().remove(fragment).commit()
 //                    }
                         supportFragmentManager.beginTransaction()
-                            .replace(R.id.home_container, GroupsFragment.newInstance())
-                            //.addToBackStack(null)
+                            .replace(
+                                R.id.home_container,
+                                HostGroupsFragment.newInstance(),
+                                HostGroupsFragment.TAG
+                            )
+                            .addToBackStack(null)
                             .commit()
                     }
 

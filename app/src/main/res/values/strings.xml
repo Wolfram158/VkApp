@@ -14,4 +14,5 @@
     <string name="try_load">Повторить попытку</string>
     <string name="run_out_of_news">Рекомендации закончились</string>
     <string name="groups1">Groups</string>
+    <string name="group_name">Название сообщества</string>
 </resources>

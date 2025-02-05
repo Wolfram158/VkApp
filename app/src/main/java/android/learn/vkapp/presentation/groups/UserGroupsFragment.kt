@@ -1,31 +1,31 @@
 package android.learn.vkapp.presentation.groups
 
 import android.content.Context
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.learn.vkapp.R
 import android.learn.vkapp.data.mapper.GroupsMapper
+import android.learn.vkapp.data.network.dto.GroupsResponseDto
 import android.learn.vkapp.databinding.FragmentGroupsBinding
 import android.learn.vkapp.presentation.App
 import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.group.GroupFragment
 import android.learn.vkapp.presentation.groups.adapter.GroupsAdapter
 import android.learn.vkapp.utils.getAccessToken
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import java.lang.RuntimeException
 import javax.inject.Inject
 
-class GroupsFragment : Fragment() {
+class UserGroupsFragment : Fragment() {
     private var _binding: FragmentGroupsBinding? = null
     private val binding: FragmentGroupsBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupsBinding is null")
 
-    private lateinit var groupsViewModel: GroupsViewModel
+    private lateinit var groupsViewModel: UserGroupsViewModel
     private lateinit var adapter: GroupsAdapter
 
     @Inject
@@ -70,26 +70,29 @@ class GroupsFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        groupsViewModel = ViewModelProvider(this, viewModelFactory)[GroupsViewModel::class.java]
+        groupsViewModel = ViewModelProvider(this, viewModelFactory)[UserGroupsViewModel::class.java]
         groupsViewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                Error -> {
+                is Error<*> -> {
                     binding.progressBar.visibility = GONE
                     binding.errorText.visibility = VISIBLE
                     binding.tryLoadButton.visibility = VISIBLE
                 }
 
-                Progress -> {
+                is Progress<*> -> {
                     binding.progressBar.visibility = VISIBLE
                 }
 
-                is Result -> {
+                is Result<*> -> {
                     adapter.submitList(
                         GroupsMapper().mapToGroups(
-                            it.result
+                            it.result as GroupsResponseDto
                         ).groups
                     )
                     binding.progressBar.visibility = GONE
+                }
+
+                Initial -> {
                 }
             }
         }
@@ -110,6 +113,6 @@ class GroupsFragment : Fragment() {
     companion object {
         const val TAG = "GroupsFragment"
 
-        fun newInstance() = GroupsFragment()
+        fun newInstance() = UserGroupsFragment()
     }
 }

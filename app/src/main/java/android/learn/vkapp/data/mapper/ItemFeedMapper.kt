@@ -22,7 +22,6 @@ class ItemFeedMapper @Inject constructor() {
 
         for (post in posts.stream()
             .sorted(Comparator { o1, o2 -> return@Comparator if (o1.date < o2.date) 1 else -1 })) {
-            Log.d("ItemFeedMapper", "msg")
             val group = groups.find { it.id.toLong() == post.id.toLong().absoluteValue } ?: continue
             val feedItem = ItemFeed(
                 postId = post.postId,

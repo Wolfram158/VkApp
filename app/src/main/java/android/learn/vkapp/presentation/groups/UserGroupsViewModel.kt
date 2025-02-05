@@ -8,21 +8,21 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class GroupsViewModel @Inject constructor(
+class UserGroupsViewModel @Inject constructor(
     private val loadGroupsUseCase: LoadGroupsUseCase
 ) : ViewModel() {
-    private val _state = MutableLiveData<State>()
+    private val _state = MutableLiveData<State>(Initial)
     val state: LiveData<State>
         get() = _state
 
     fun loadGroups(token: String) {
         viewModelScope.launch {
             try {
-                _state.value = Progress
+                _state.value = Progress(Unit)
                 val response = loadGroupsUseCase(token)
                 _state.value = Result(response)
             } catch (_: Exception) {
-                _state.value = Error
+                _state.value = Error(Unit)
             }
         }
     }

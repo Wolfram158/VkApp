@@ -16,5 +16,5 @@ data class ItemWall(
     val reposts: RepostsInfo,
     val ownerPhotoUrl: String?,
     val photoContentUrl: String?,
-    val views: Int
+    val views: Int?
 )

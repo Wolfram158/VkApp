@@ -1,11 +1,11 @@
 package android.learn.vkapp.presentation.groups
 
-import android.learn.vkapp.data.network.dto.GroupsResponseDto
-
 sealed class State
 
-data object Error : State()
+data object Initial : State()
 
-data object Progress : State()
+data class Error<T>(val query: T) : State()
 
-data class Result(val result: GroupsResponseDto) : State()
+data class Progress<T>(val progress: T) : State()
+
+data class Result<T>(val result: T) : State()
