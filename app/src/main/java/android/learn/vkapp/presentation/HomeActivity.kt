@@ -2,13 +2,12 @@ package android.learn.vkapp.presentation
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.learn.vkapp.R
 import android.learn.vkapp.databinding.ActivityHomeBinding
 import android.learn.vkapp.presentation.groups.HostGroupsFragment
-import android.learn.vkapp.presentation.groups.UserGroupsFragment
 import android.learn.vkapp.presentation.news.NewsFragment
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
 class HomeActivity : AppCompatActivity() {
     private val binding by lazy {

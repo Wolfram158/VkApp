@@ -2,6 +2,7 @@ package android.learn.vkapp.di
 
 import android.learn.vkapp.presentation.comments.CommentsViewModel
 import android.learn.vkapp.presentation.group.WallViewModel
+import android.learn.vkapp.presentation.groups.FoundGroupsViewModel
 import android.learn.vkapp.presentation.groups.UserGroupsViewModel
 import android.learn.vkapp.presentation.news.NewsViewModel
 import androidx.lifecycle.ViewModel
@@ -30,4 +31,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(NewsViewModel::class)
     fun bindNewsViewModel(viewModel: NewsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FoundGroupsViewModel::class)
+    fun bindFoundGroupsViewModel(viewModel: FoundGroupsViewModel): ViewModel
 }

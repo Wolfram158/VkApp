@@ -3,6 +3,8 @@ package android.learn.vkapp.di
 import android.learn.vkapp.presentation.App
 import android.learn.vkapp.presentation.comments.CommentsFragment
 import android.learn.vkapp.presentation.group.GroupFragment
+import android.learn.vkapp.presentation.groups.FoundGroupsFragment
+import android.learn.vkapp.presentation.groups.HostGroupsFragment
 import android.learn.vkapp.presentation.groups.UserGroupsFragment
 import android.learn.vkapp.presentation.news.NewsFragment
 import dagger.Component
@@ -19,4 +21,8 @@ interface ApplicationComponent {
     fun inject(fragment: GroupFragment)
 
     fun inject(fragment: CommentsFragment)
+
+    fun inject(fragment: FoundGroupsFragment)
+
+    fun inject(fragment: HostGroupsFragment)
 }

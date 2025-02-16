@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FoundGroupsViewModel : ViewModel() {
+class FoundGroupsViewModel @Inject constructor(): ViewModel() {
     private val _groups = MutableStateFlow<State>(Initial)
     val groups: StateFlow<State> = _groups.asStateFlow()
 
@@ -46,7 +47,7 @@ class FoundGroupsViewModel : ViewModel() {
     fun observe(timeMillis: Long, scope: CoroutineScope, block: suspend (State) -> Unit) {
         _groups.debounce(timeMillis).onEach {
             block(it)
-        }.launchIn(scope)
+        }.launchIn(viewModelScope)
     }
 
 }
