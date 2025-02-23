@@ -19,6 +19,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 import javax.inject.Inject
@@ -57,8 +58,12 @@ class GroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
-            groupId = it.getString(ARG_PARAM1)
+//        arguments?.let {
+//            groupId = it.getString(ARG_PARAM1)
+//        }
+
+        requireArguments().getString(ID).let {
+            groupId = it
         }
 
         initAdapter()
@@ -144,17 +149,31 @@ class GroupFragment : Fragment() {
             }
         }
         adapter.onGotoCommentsClickListener = object : WallAdapter.OnGotoCommentsClickListener {
+            //            override fun onGotoCommentsClick(postId: String, ownerId: String) {
+//                parentFragmentManager.beginTransaction()
+//                    .add(
+//                        R.id.home_container,
+//                        CommentsFragment.newInstance(postId = postId, ownerId = ownerId)
+//                    ).hide(parentFragmentManager.fragments.last()).addToBackStack(null).commit()
+//            }
             override fun onGotoCommentsClick(postId: String, ownerId: String) {
-                parentFragmentManager.beginTransaction()
-                    .add(
-                        R.id.home_container,
-                        CommentsFragment.newInstance(postId = postId, ownerId = ownerId)
-                    ).hide(parentFragmentManager.fragments.last()).addToBackStack(null).commit()
+                val navHostFragment = parentFragmentManager.findFragmentById(R.id.home_container);
+
+                val args = Bundle().apply {
+                    putString(CommentsFragment.POST_ID, postId)
+                    putString(CommentsFragment.OWNER_ID, ownerId)
+                }
+                if (navHostFragment != null) {
+
+                    val navController = navHostFragment.findNavController()
+                    navController.navigate(R.id.action_groupFragment_to_commentsFragment, args)
+                }
             }
         }
     }
 
     companion object {
+        const val ID = "id"
         private const val ARG_PARAM1 = "id"
         private const val LIKE_OBJECT = "post"
 

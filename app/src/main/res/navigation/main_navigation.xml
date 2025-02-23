@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/newsFragment">
+
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="android.learn.vkapp.presentation.news.NewsFragment"
+        android:label="fragment_news"
+        tools:layout="@layout/fragment_news" >
+        <action
+            android:id="@+id/action_newsFragment_to_userGroupsFragment"
+            app:destination="@id/userGroupsFragment"
+            app:popUpTo="@id/newsFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_newsFragment_to_groupFragment"
+            app:destination="@id/groupFragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_newsFragment_to_commentsFragment"
+            app:destination="@id/commentsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userGroupsFragment"
+        android:name="android.learn.vkapp.presentation.groups.UserGroupsFragment"
+        android:label="fragment_groups"
+        tools:layout="@layout/fragment_groups" >
+        <action
+            android:id="@+id/action_userGroupsFragment_to_groupFragment"
+            app:destination="@id/groupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupFragment"
+        android:name="android.learn.vkapp.presentation.group.GroupFragment"
+        android:label="fragment_group"
+        tools:layout="@layout/fragment_group" >
+        <action
+            android:id="@+id/action_groupFragment_to_commentsFragment"
+            app:destination="@id/commentsFragment"
+            app:restoreState="true"
+            app:popUpToSaveState="true"
+            app:popUpTo="@id/groupFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentsFragment"
+        android:name="android.learn.vkapp.presentation.comments.CommentsFragment"
+        android:label="fragment_comments"
+        tools:layout="@layout/fragment_comments" />
+</navigation>

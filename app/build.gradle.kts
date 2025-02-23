@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     id("vkid.manifest.placeholders")
+    alias(libs.plugins.navigation.safeargs)
 }
 
 android {
@@ -88,6 +89,11 @@ dependencies {
     implementation(libs.picasso)
     implementation(libs.work.runtime)
     implementation(libs.fragment)
+
+    implementation(libs.kotlinxSer)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+    implementation(libs.navSupFragments)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

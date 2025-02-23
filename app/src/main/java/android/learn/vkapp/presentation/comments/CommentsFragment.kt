@@ -1,24 +1,28 @@
 package android.learn.vkapp.presentation.comments
 
 import android.content.Context
+import android.learn.vkapp.R
 import android.learn.vkapp.data.mapper.CommentsMapper
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.learn.vkapp.databinding.FragmentCommentsBinding
 import android.learn.vkapp.domain.comments.Comment
 import android.learn.vkapp.presentation.App
 import android.learn.vkapp.presentation.ViewModelFactory
 import android.learn.vkapp.presentation.comments.adapter.CommentsAdapter
 import android.learn.vkapp.utils.getAccessToken
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import kotlinx.coroutines.launch
-import java.lang.RuntimeException
 import javax.inject.Inject
 import kotlin.math.absoluteValue
 
@@ -43,6 +47,11 @@ class CommentsFragment : Fragment() {
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Navigation.findNavController(requireActivity(), R.id.home_container).popBackStack()
+            }
+        }.also { requireActivity().onBackPressedDispatcher.addCallback(this, it) }
     }
 
     override fun onCreateView(
@@ -56,7 +65,12 @@ class CommentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
+//        arguments?.let {
+//            postId = it.getString(POST_ID)
+//            ownerId = it.getString(OWNER_ID)
+//        }
+
+        requireArguments().let {
             postId = it.getString(POST_ID)
             ownerId = it.getString(OWNER_ID)
         }
@@ -149,8 +163,8 @@ class CommentsFragment : Fragment() {
     }
 
     companion object {
-        private const val POST_ID = "post_id"
-        private const val OWNER_ID = "owner_id"
+        const val POST_ID = "post_id"
+        const val OWNER_ID = "owner_id"
         private const val LIKE_OBJECT = "comment"
 
         fun newInstance(postId: String, ownerId: String) =

@@ -7,6 +7,7 @@ import android.learn.vkapp.data.network.dto.GroupsResponseDto
 import android.learn.vkapp.databinding.FragmentGroupsBinding
 import android.learn.vkapp.presentation.App
 import android.learn.vkapp.presentation.ViewModelFactory
+import android.learn.vkapp.presentation.comments.CommentsFragment
 import android.learn.vkapp.presentation.group.GroupFragment
 import android.learn.vkapp.presentation.groups.adapter.GroupsAdapter
 import android.learn.vkapp.utils.getAccessToken
@@ -18,6 +19,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import javax.inject.Inject
 
 class UserGroupsFragment : Fragment() {
@@ -103,9 +105,18 @@ class UserGroupsFragment : Fragment() {
         binding.groupsRv.adapter = adapter
         adapter.onGroupClickListener = object : GroupsAdapter.OnGroupClickListener {
             override fun onGroupClick(id: String) {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.home_container, GroupFragment.newInstance(id))
-                    .addToBackStack(null).commit()
+//                parentFragmentManager.beginTransaction()
+//                    .replace(R.id.home_container, GroupFragment.newInstance(id))
+//                    .addToBackStack(null).commit()
+                val navHostFragment = parentFragmentManager.findFragmentById(R.id.home_container)
+
+                val args = Bundle().apply {
+                    putString(GroupFragment.ID, id)
+                }
+                if (navHostFragment != null) {
+                    val navController = navHostFragment.findNavController()
+                    navController.navigate(R.id.action_userGroupsFragment_to_groupFragment, args)
+                }
             }
         }
     }

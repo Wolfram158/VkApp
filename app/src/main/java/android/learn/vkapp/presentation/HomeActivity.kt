@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.learn.vkapp.R
 import android.learn.vkapp.databinding.ActivityHomeBinding
-import android.learn.vkapp.presentation.groups.HostGroupsFragment
 import android.learn.vkapp.presentation.news.NewsFragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 
 class HomeActivity : AppCompatActivity() {
     private val binding by lazy {
@@ -26,14 +26,15 @@ class HomeActivity : AppCompatActivity() {
 //                    if (fragment != null) {
 //                        supportFragmentManager.beginTransaction().remove(fragment).commit()
 //                    }
-                        supportFragmentManager.beginTransaction()
-                            .replace(
-                                R.id.home_container,
-                                HostGroupsFragment.newInstance(),
-                                HostGroupsFragment.TAG
-                            )
-                            .addToBackStack(null)
-                            .commit()
+//                        supportFragmentManager.beginTransaction()
+//                            .replace(
+//                                R.id.home_container,
+//                                HostGroupsFragment.newInstance(),
+//                                HostGroupsFragment.TAG
+//                            )
+//                            .addToBackStack(null)
+//                            .commit()
+                        findNavController(R.id.home_container).navigate(R.id.action_newsFragment_to_userGroupsFragment)
                     }
 
                     R.id.item_news -> {
@@ -41,10 +42,10 @@ class HomeActivity : AppCompatActivity() {
 //                    if (fragment != null) {
 //                        supportFragmentManager.beginTransaction().remove(fragment).commit()
 //                    }
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.home_container, NewsFragment.newInstance())
-                            //.addToBackStack(null)
-                            .commit()
+//                        supportFragmentManager.beginTransaction()
+//                            .replace(R.id.home_container, NewsFragment.newInstance())
+//                            //.addToBackStack(null)
+//                            .commit()
                     }
 
                     R.id.item_friends -> {

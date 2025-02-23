@@ -25,8 +25,14 @@ fragmentVersion = "1.8.3"
 dagger = "2.51"
 lifecycleVersion = "2.8.5"
 okHttp = "4.12.0"
+navVersion = "2.8.7"
+kotlinxSerVersion = "1.7.3"
 
 [libraries]
+kotlinxSer = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerVersion"}
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navVersion"}
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navVersion" }
+navSupFragments = { group = "androidx.navigation", name = "navigation-dynamic-features-fragment", version.ref = "navVersion"}
 okHttpLog = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttp" }
 okHttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttp" }
 vk-userid = { group = "com.vk", name = "android-sdk-id", version.ref = "vkUserIdVersion" }
@@ -67,4 +73,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 vk-holder = { id = "vkid.manifest.placeholders", version.ref = "vk-holder" }
-
+navigation-safeargs = { id = "androidx.navigation.safeargs", version.ref = "navVersion"}

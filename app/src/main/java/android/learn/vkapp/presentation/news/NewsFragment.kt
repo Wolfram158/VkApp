@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
@@ -142,22 +143,43 @@ class NewsFragment : Fragment() {
         }
         val onGotoWallClickListener = object : NewsAdapter.OnGotoWallClickListener {
             override fun onGotoWallClick(id: String) {
-                parentFragmentManager.beginTransaction()
-                    .add(R.id.home_container, GroupFragment.newInstance(id), null)
-                    .hide(parentFragmentManager.fragments.last())
-                    .addToBackStack(null).commit()
+//                parentFragmentManager.beginTransaction()
+//                    .add(R.id.home_container, GroupFragment.newInstance(id), null)
+//                    .hide(parentFragmentManager.fragments.last())
+//                    .addToBackStack(null).commit()
+                val navHostFragment = parentFragmentManager.findFragmentById(R.id.home_container);
+
+                val args = Bundle().apply {
+                    putString(GroupFragment.ID, id)
+                }
+                if (navHostFragment != null) {
+
+                    val navController = navHostFragment.findNavController()
+                    navController.navigate(R.id.action_newsFragment_to_groupFragment, args)
+                }
             }
         }
         val onGotoCommentsClickListener = object : NewsAdapter.OnGotoCommentsClickListener {
             override fun onGotoCommentsClick(postId: String, ownerId: String) {
-                parentFragmentManager.beginTransaction()
-                    .add(
-                        R.id.home_container,
-                        CommentsFragment.newInstance(postId = postId, ownerId = ownerId),
-                        null
-                    )
-                    .hide(parentFragmentManager.fragments.last())
-                    .addToBackStack(null).commit()
+//                parentFragmentManager.beginTransaction()
+//                    .add(
+//                        R.id.home_container,
+//                        CommentsFragment.newInstance(postId = postId, ownerId = ownerId),
+//                        null
+//                    )
+//                    .hide(parentFragmentManager.fragments.last())
+//                    .addToBackStack(null).commit()
+                val navHostFragment = parentFragmentManager.findFragmentById(R.id.home_container);
+
+                val args = Bundle().apply {
+                    putString(CommentsFragment.POST_ID, postId)
+                    putString(CommentsFragment.OWNER_ID, ownerId)
+                }
+                if (navHostFragment != null) {
+
+                    val navController = navHostFragment.findNavController()
+                    navController.navigate(R.id.action_newsFragment_to_commentsFragment, args)
+                }
             }
         }
         val onTryLoadClickListener = object : NewsAdapter.OnTryLoadClickListener {
