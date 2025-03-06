@@ -1,21 +1,22 @@
 package android.learn.vkapp.data.repository
 
 import android.learn.vkapp.data.network.ApiService
-import android.learn.vkapp.data.network.dto.GroupWallResponseDto
+import android.learn.vkapp.data.network.WallPageSource
 import android.learn.vkapp.data.network.dto.LikesCountResponseDto
 import android.learn.vkapp.domain.group.GroupRepository
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import javax.inject.Inject
 
 class GroupRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ) : GroupRepository {
-    override suspend fun loadWall(
-        token: String,
+    override fun loadWall(
         id: String,
-        extended: String
-    ): GroupWallResponseDto {
-        return apiService.loadWall(token, id, extended)
-    }
+    ) = Pager(
+        pagingSourceFactory = { WallPageSource(ownerId = id, apiService = apiService) },
+        config = PagingConfig(pageSize = 10, initialLoadSize = 10, prefetchDistance = 1)
+    ).flow
 
     override suspend fun addLike(
         token: String,

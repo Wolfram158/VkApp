@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.picasso)
     implementation(libs.work.runtime)
     implementation(libs.fragment)
+    implementation(libs.paging)
 
     implementation(libs.kotlinxSer)
     implementation(libs.navigation.fragment)

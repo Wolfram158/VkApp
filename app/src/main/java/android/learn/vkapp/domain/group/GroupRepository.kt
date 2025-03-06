@@ -1,10 +1,11 @@
 package android.learn.vkapp.domain.group
 
-import android.learn.vkapp.data.network.dto.GroupWallResponseDto
 import android.learn.vkapp.data.network.dto.LikesCountResponseDto
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 
 interface GroupRepository {
-    suspend fun loadWall(token: String, id: String, extended: String): GroupWallResponseDto
+    fun loadWall(id: String): Flow<PagingData<ItemWall>>
 
     suspend fun addLike(
         token: String,

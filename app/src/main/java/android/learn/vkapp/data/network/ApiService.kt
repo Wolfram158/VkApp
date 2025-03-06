@@ -49,7 +49,9 @@ interface ApiService {
     suspend fun loadWall(
         @Query("access_token") token: String,
         @Query("owner_id") id: String,
-        @Query("extended") extended: String
+        @Query("extended") extended: String,
+        @Query("offset") startFrom: String = "0",
+        @Query("count") count: String = "10"
     ): GroupWallResponseDto
 
     @GET("groups.get?v=5.199")

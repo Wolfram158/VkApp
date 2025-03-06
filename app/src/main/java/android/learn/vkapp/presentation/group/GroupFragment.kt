@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.learn.vkapp.data.mapper.ItemWallMapper
 import android.learn.vkapp.databinding.FragmentGroupBinding
 import android.learn.vkapp.domain.group.ItemWall
 import android.learn.vkapp.presentation.App
@@ -16,10 +15,12 @@ import android.learn.vkapp.presentation.comments.CommentsFragment
 import android.learn.vkapp.presentation.group.adapter.WallAdapter
 import android.learn.vkapp.utils.getAccessToken
 import android.view.View.GONE
-import android.view.View.VISIBLE
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import android.learn.vkapp.presentation.group.adapter.LoadStateAdapter
+import androidx.core.view.isVisible
+import androidx.paging.LoadState
 import kotlinx.coroutines.launch
 import java.lang.RuntimeException
 import javax.inject.Inject
@@ -76,47 +77,52 @@ class GroupFragment : Fragment() {
 
         observeViewModel()
 
-        loadWall()
+//        loadWall()
 
     }
 
     private fun observeViewModel() {
         wallViewModel = ViewModelProvider(this, viewModelFactory)[WallViewModel::class.java]
-        wallViewModel.state.observe(viewLifecycleOwner) {
-            when (it) {
-                Error -> {
-                    binding.progressBar.visibility = GONE
-                    binding.errorText.visibility = VISIBLE
-                    binding.tryLoadButton.visibility = VISIBLE
-                }
-
-                Progress -> {
-                    binding.progressBar.visibility = VISIBLE
-                }
-
-                is Result -> {
-                    if (it.result != null) {
-                        adapter.submitList(
-                            ItemWallMapper().mapToItemWall(it.result)
-                        )
-                    }
-                    binding.progressBar.visibility = GONE
-                }
-            }
-        }
+        loadWall()
+//        wallViewModel.state.observe(viewLifecycleOwner) {
+//            when (it) {
+//                Error -> {
+//                    binding.progressBar.visibility = GONE
+//                    binding.errorText.visibility = VISIBLE
+//                    binding.tryLoadButton.visibility = VISIBLE
+//                }
+//
+//                Progress -> {
+//                    binding.progressBar.visibility = VISIBLE
+//                }
+//
+//                is Result -> {
+//                    if (it.result != null) {
+//                        adapter.submitList(
+//                            ItemWallMapper().mapToItemWall(it.result)
+//                        )
+//                    }
+//                    binding.progressBar.visibility = GONE
+//                }
+//            }
+//        }
     }
 
     private fun loadWall() {
         val groupIdVal = groupId
         if (groupIdVal != null) {
-            wallViewModel.loadWall(getAccessToken(), groupIdVal)
+            lifecycleScope.launch {
+                wallViewModel.loadWall("-$groupIdVal").collect {
+                    it.let {
+                        adapter.submitData(lifecycle, it)
+                    }
+                }
+            }
         }
     }
 
     private fun initAdapter() {
-        adapter = WallAdapter()
-        binding.groupWallRv.adapter = adapter
-        adapter.onLikeClick = object : WallAdapter.OnLikeClickListener {
+        val onLikeClick = object : WallAdapter.OnLikeClickListener {
             override fun onLikeClick(itemWall: ItemWall, position: Int) {
                 lifecycleScope.launch {
                     val response = wallViewModel.addLike(
@@ -125,11 +131,17 @@ class GroupFragment : Fragment() {
                         itemWall.id.toLong().absoluteValue,
                         -itemWall.ownerId.toLong()
                     )
-                    response.response.count.let { adapter.updateLikes(it.toString(), position) }
+                    response.response.count.let {
+                        adapter.updateLikes(
+                            adapter.snapshot().items,
+                            it.toString(),
+                            position
+                        )
+                    }
                 }
             }
         }
-        adapter.onDislikeClick = object : WallAdapter.OnDislikeClickListener {
+        val onDislikeClick = object : WallAdapter.OnDislikeClickListener {
             override fun onDislikeClick(itemWall: ItemWall, position: Int) {
                 lifecycleScope.launch {
                     val response = wallViewModel.deleteLike(
@@ -140,6 +152,7 @@ class GroupFragment : Fragment() {
                     )
                     response.response.count.let {
                         adapter.updateLikes(
+                            adapter.snapshot().items,
                             it.toString(),
                             position,
                             false
@@ -148,7 +161,7 @@ class GroupFragment : Fragment() {
                 }
             }
         }
-        adapter.onGotoCommentsClickListener = object : WallAdapter.OnGotoCommentsClickListener {
+        val onGotoCommentsClickListener = object : WallAdapter.OnGotoCommentsClickListener {
             //            override fun onGotoCommentsClick(postId: String, ownerId: String) {
 //                parentFragmentManager.beginTransaction()
 //                    .add(
@@ -164,11 +177,24 @@ class GroupFragment : Fragment() {
                     putString(CommentsFragment.OWNER_ID, ownerId)
                 }
                 if (navHostFragment != null) {
-
                     val navController = navHostFragment.findNavController()
                     navController.navigate(R.id.action_groupFragment_to_commentsFragment, args)
                 }
             }
+        }
+        adapter = WallAdapter(
+            onLikeClick = onLikeClick,
+            onDislikeClick = onDislikeClick,
+            onGotoCommentsClickListener = onGotoCommentsClickListener
+        )
+        binding.groupWallRv.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = LoadStateAdapter(),
+            footer = LoadStateAdapter()
+        )
+        adapter.addLoadStateListener { loadState ->
+            binding.groupWallRv.isVisible = loadState.source.refresh is LoadState.NotLoading
+            binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+            binding.tryLoadButton.isVisible = loadState.source.refresh is LoadState.Error
         }
     }
 
